@@ -1,0 +1,22 @@
+# Copy to ~/.config/gh-app-token/config.toml (or pass --config / set GH_APP_CONFIG).
+# Precedence: command-line flags > GH_APP_* environment > profile > top-level keys here.
+
+default_profile = "main"          # used when --profile / GH_APP_PROFILE is not given
+
+# Top-level keys are defaults shared by every profile.
+# api_url = "https://api.github.com"
+# refresh_margin = 300            # re-mint when fewer than this many seconds remain
+
+[profiles.main]
+app_id = "123456"                 # numeric App ID, or the app's client ID
+installation_id = 12345678        # or: owner = "my-org" (+ optional repo = "my-repo") to look it up
+private_key_path = "my-app.private-key.pem"   # relative paths are relative to this file
+# repositories = ["only-this-repo"]            # scope tokens down...
+# permissions = { contents = "read", pull_requests = "write" }   # ...and/or their permissions
+
+# A second app, or a GitHub Enterprise Server instance:
+# [profiles.ghes]
+# app_id = "7"
+# owner = "platform"
+# private_key_path = "~/keys/ghes-app.pem"
+# api_url = "https://ghe.example.com/api/v3"

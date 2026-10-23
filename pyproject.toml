@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gh-app-token"
+dynamic = ["version"]
+description = "Mint and cache GitHub App installation tokens for gh and git"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+keywords = ["github", "github-app", "gh", "token", "git-credential"]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Version Control :: Git",
+]
+dependencies = []
+
+[project.scripts]
+gh-app-token = "gh_app_token:main"
+
+[tool.setuptools]
+py-modules = ["gh_app_token"]
+
+[tool.setuptools.dynamic]
+version = { attr = "gh_app_token.__version__" }
