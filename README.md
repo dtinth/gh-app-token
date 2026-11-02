@@ -84,6 +84,40 @@ comes before the real `gh` in `PATH`.
 If the token can't be minted, the shim **fails** rather than falling back to
 `gh`'s stored login, so you never act as the wrong identity by accident.
 
+### When plain `gh` still isn't authenticated
+
+Run `type -a gh`. The first line must be `~/.local/bin/gh`. If it is anything
+else, something is ahead of the shim in `PATH`, and that `gh` has no credentials.
+
+**A version manager that rewrites `PATH` on every prompt is the usual cause.**
+`mise activate` prepends each tool's install directory, so a `gh` that mise
+manages comes first and the shim comes last. Setting `PATH` in your shell rc
+file does not help, because the hook runs again after it. Tell mise to keep the
+shim directory in front. A file in mise's global `conf.d` is enough, and it
+needs no change to any project:
+
+```toml
+# ~/.config/mise/conf.d/gh-app-token.toml
+[env]
+_.path = ["{{env.HOME}}/.local/bin"]
+```
+
+Checked with mise 2026.10.25: after `mise activate bash`, `~/.local/bin` is first,
+and the shim still finds the real `gh` because it skips only its own directory.
+This puts all of `~/.local/bin` ahead of mise's tools, not only the shim. Other
+version managers were not tried.
+
+**The interpreter can be a shim too.** The script starts with
+`#!/usr/bin/env python3`. If `python3` resolves through a version manager, that
+manager's errors reach you instead of ours. One seen case: an untrusted
+`.mise.toml` made every shimmed command, `gh-app-token` included, exit with
+`mise ERROR ... are not trusted`. It looks like an authentication failure and is
+not one. Trust the config (`mise trust`), or run the script with a fixed
+interpreter: `/usr/bin/python3 ~/.local/bin/gh-app-token doctor`.
+
+To tell a `PATH` problem from a credentials problem, run the real `gh` once
+without the shim: `gh-app-token exec -- /full/path/to/gh api user`.
+
 ### Make `git` work over HTTPS
 
 ```sh
